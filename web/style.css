@@ -1,0 +1,166 @@
+:root {
+    --bg: #0b1020;
+    --panel: rgba(255, 255, 255, 0.06);
+    --panel-strong: rgba(255, 255, 255, 0.10);
+    --text: rgba(255, 255, 255, 0.92);
+    --muted: rgba(255, 255, 255, 0.70);
+    --border: rgba(255, 255, 255, 0.12);
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    --radius: 14px;
+    --maxw: 980px;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
+    --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji",
+    "Segoe UI Emoji";
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100vh;
+}
+
+body {
+    margin: 0;
+    font-family: var(--sans);
+    color: var(--text);
+    background: radial-gradient(1200px 800px at 20% -10%, rgba(99, 102, 241, 0.25), transparent 55%),
+    radial-gradient(900px 600px at 85% 0%, rgba(34, 197, 94, 0.18), transparent 60%),
+    radial-gradient(900px 600px at 50% 110%, rgba(236, 72, 153, 0.14), transparent 55%),
+    var(--bg);
+    line-height: 1.45;
+}
+
+/* --- Layout --- */
+h1 {
+    width: min(var(--maxw), calc(100% - 32px));
+    margin: 28px auto 14px;
+    font-size: clamp(1.4rem, 2.2vw, 2rem);
+    letter-spacing: 0.2px;
+}
+
+#bombs {
+    height: 500px;
+}
+
+#bombs,
+#download {
+    width: min(var(--maxw), calc(100% - 32px));
+    margin: 14px auto 22px;
+    padding: 18px 18px 16px;
+    background: linear-gradient(180deg, var(--panel), rgba(255, 255, 255, 0.03));
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(8px);
+}
+
+/* If you ever set errors, this makes them pop a bit (optional) */
+#table-err:not(:empty) {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* --- Tables --- */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+#bomb-table th,
+#bomb-table td,
+#downloads-table th,
+#downloads-table td {
+    padding: 4px 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    vertical-align: middle;
+    line-height: 1.2;
+}
+
+#bomb-table th,
+#downloads-table th {
+    text-align: left;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.78);
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+#bomb-table td,
+#downloads-table td {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+/* Row hover + zebra striping */
+#bomb-table tr:nth-child(even) td,
+#downloads-table tr:nth-child(even) td {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+#bomb-table tr:hover td,
+#downloads-table tr:hover td {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* Remove last border */
+#bomb-table tr:last-child td,
+#downloads-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Make “Age” column feel monospace-y */
+#bomb-table td:nth-child(3) {
+    font-family: var(--mono);
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+#bomb-table tr.same-server td {
+    background: rgba(34, 197, 94, 0.28) !important;
+}
+
+/* --- Download section --- */
+.download-heading {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+}
+
+.download-body {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+/* --- Responsive tweaks --- */
+@media (max-width: 640px) {
+    #bombs,
+    #download {
+        padding: 14px;
+    }
+
+    #bomb-table th,
+    #bomb-table td,
+    #downloads-table th,
+    #downloads-table td {
+        padding: 10px 10px;
+    }
+
+    /* Let long values wrap nicely */
+    td {
+        word-break: break-word;
+    }
+}
