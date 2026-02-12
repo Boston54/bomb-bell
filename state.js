@@ -25,7 +25,7 @@ class ThrownBomb {
 
 let activeBombs = [];
 // leaving this here for future testing:
-// [new ThrownBomb("test", "testWorld", "Combat XP"), new ThrownBomb("test", "testWorld", "Profession XP"), new ThrownBomb("test", "testWorld", "Profession Speed"), new ThrownBomb("test", "testWorld", "Loot"), new ThrownBomb("test", "testWorld", "Loot Chest"), new ThrownBomb("test", "testWorld", "Dungeon")];
+// activeBombs = [new ThrownBomb("test", "testWorld", "Combat XP"), new ThrownBomb("test", "testWorld", "Profession XP"), new ThrownBomb("test", "testWorld", "Profession Speed"), new ThrownBomb("test", "testWorld", "Loot"), new ThrownBomb("test", "testWorld", "Loot Chest"), new ThrownBomb("test", "testWorld", "Dungeon")];
 
 function updateState(username, world, type) {
     // Pack this into a bomb

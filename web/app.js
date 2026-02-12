@@ -35,6 +35,17 @@ const bombData = Object.freeze({
     }
 });
 
+const sortOrders = Object.freeze({
+    BOMB_TYPE: "0",
+    SERVER: "1",
+    AGE: "2",
+    USER: "3"
+});
+const sortDirs = Object.freeze({ ASC: "0", DESC: "1" });
+
+let currSortOrder = sortOrders.AGE;
+let currSortDirection = sortDirs.ASC;
+
 function getBombType(bombString) {
     for (const [_, data] of Object.entries(bombData)) {
         if (data.string === bombString) {
@@ -62,7 +73,6 @@ function createBombTableRow(type, server, timestamp, username) {
     tdServer.textContent = server.toString();
     if (typeof timestamp == "number") {
         const age = Math.floor((now - timestamp) / 1000);
-        console.log(type + " | " + typeof type);
         const timeLeft = (type.duration * 60) - age;
         tdAge.textContent = timeLeft < 60 ? `${timeLeft}s` : `${Math.floor(timeLeft/60)}m${timeLeft%60}s`;
     } else {
@@ -78,33 +88,68 @@ function createBombTableRow(type, server, timestamp, username) {
     bombTable.appendChild(tr);
 }
 
-async function refreshBombs() {
-    try {
-        const res = await fetch("/latest", { cache: "no-store" });
-        if (!res.ok) return;
+let latest = null;
+let headTr = null;
 
-        const activeBombs = JSON.parse(await res.json());
+async function refreshBombs(data) {
+    try {
+        let activeBombs;
+        if (data === null) {
+            const res = await fetch("/latest", { cache: "no-store" });
+            if (!res.ok) return;
+
+            activeBombs = JSON.parse(await res.json());
+            latest = activeBombs;
+        } else {
+            activeBombs = latest;
+        }
+
+        // Sort the list by the current sort key
+        switch (currSortOrder) {
+            case sortOrders.BOMB_TYPE:
+                activeBombs.sort((a, b) => a.type.localeCompare(b.type));
+                break;
+            case sortOrders.SERVER:
+                activeBombs.sort((a, b) => a.world.localeCompare(b.world));
+                break;
+            case sortOrders.AGE:
+                // age is the order that the backend stores it in, so it is already sorted.
+                break;
+            case sortOrders.USER:
+                activeBombs.sort((a, b) => a.username.localeCompare(b.username));
+                break;
+        }
+        // Reverse the list if it is descending
+        if (currSortDirection === sortDirs.DESC) {
+            activeBombs.reverse();
+        }
 
         // Clear the table
         bombTable.replaceChildren();
 
-        // Reconstruct the header
-        const headTr = document.createElement("tr");
-        const headType = document.createElement("th");
-        const headServer = document.createElement("th");
-        const headAge = document.createElement("th");
-        const headUsername = document.createElement("th");
+        // If the header has not already been constructed, create it.
+        if (headTr === null) {
+            headTr = document.createElement("tr");
+            const headType = document.createElement("th");
+            const headServer = document.createElement("th");
+            const headAge = document.createElement("th");
+            const headUsername = document.createElement("th");
 
-        headType.textContent = "Bomb Type";
-        headServer.textContent = "Server";
-        headAge.textContent = "Duration";
-        headUsername.textContent = "User";
+            headType.dataset.sortKey = sortOrders.BOMB_TYPE;
+            headServer.dataset.sortKey = sortOrders.SERVER;
+            headAge.dataset.sortKey = sortOrders.AGE;
+            headUsername.dataset.sortKey = sortOrders.USER;
 
-        headTr.appendChild(headType);
-        headTr.appendChild(headServer);
-        headTr.appendChild(headAge);
-        headTr.appendChild(headUsername);
+            headType.textContent = "Bomb Type";
+            headServer.textContent = "Server";
+            headAge.textContent = "Duration";
+            headUsername.textContent = "User";
 
+            headTr.appendChild(headType);
+            headTr.appendChild(headServer);
+            headTr.appendChild(headAge);
+            headTr.appendChild(headUsername);
+        }
         bombTable.appendChild(headTr);
 
         if (activeBombs.length > 0) {
@@ -125,8 +170,8 @@ async function refreshBombs() {
     }
 }
 
-refreshBombs();
-setInterval(refreshBombs, 1000);
+refreshBombs(null);
+setInterval(() => refreshBombs(null), 1000);
 
 async function initDownloads() {
     const res = await fetch("/downloads", {cache: "no-store"});
@@ -209,4 +254,22 @@ bombTable.addEventListener("mouseover", (e) => {
 bombTable.addEventListener("mouseleave", () => {
     hoveredServer = null;
     applyServerHighlight(null);
+});
+
+bombTable.addEventListener("click", (e) => {
+    const th = e.target.closest("th");
+    if (!th || !bombTable.contains(th)) {
+        console.log("test");
+        return;
+    }
+
+    // Get the sort key for this interaction
+    const sortKey = th.dataset.sortKey;
+
+    // Update sort order and direction
+    currSortDirection = sortKey === currSortOrder ? (currSortDirection === sortDirs.ASC ? sortDirs.DESC : sortDirs.ASC) : sortDirs.ASC;
+    currSortOrder = sortKey;
+
+    // Update table
+    if (latest !== null) refreshBombs(latest);
 });
