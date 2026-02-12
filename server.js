@@ -28,7 +28,6 @@ app.post("/ingest", (req, res) => {
 
     updateState(packet.username, packet.world, packet.type);
 
-    // Respond fast – mods shouldn't wait
     res.status(204).send();
 });
 

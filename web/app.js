@@ -2,14 +2,47 @@ const tableErr = document.getElementById("table-err");
 const bombTable = document.getElementById("bomb-table");
 const downloadsTable = document.getElementById("downloads-table");
 
-const bombDurations = Object.freeze({
-    "Combat XP": 20,
-    "Profession XP": 20,
-    "Profession Speed": 10,
-    "Loot": 20,
-    "Loot Chest": 20,
-    "Dungeon": 10
+const bombData = Object.freeze({
+    CombatXP: {
+        string: "Combat XP",
+        duration: 20,
+        color: "#FF0000"
+    },
+    ProfessionXP: {
+        string: "Profession XP",
+        duration: 20,
+        color: "#42BFF5"
+    },
+    ProfessionSpeed: {
+        string: "Profession Speed",
+        duration: 10,
+        color: "#00D43F"
+    },
+    Loot: {
+        string: "Loot",
+        duration: 20,
+        color: "#FFFF00"
+    },
+    LootChest: {
+        string: "Loot Chest",
+        duration: 20,
+        color: "#FF00D4"
+    },
+    Dungeon: {
+        string: "Dungeon",
+        duration: 10,
+        color: "#FFC400"
+    }
 });
+
+function getBombType(bombString) {
+    for (const [type, data] of bombData) {
+        if (data.string === bombString) {
+            return type;
+        }
+    }
+    return null;
+}
 
 function createBombTableRow(type, server, timestamp, username) {
     const now = Date.now();
@@ -20,11 +53,16 @@ function createBombTableRow(type, server, timestamp, username) {
     const tdAge = document.createElement("td");
     const tdUsername = document.createElement("td");
 
-    tdType.textContent = type.toString();
+    if (typeof type == "object") {
+        tdType.textContent = type.string;
+        tdType.style = "color: " + type.color;
+    } else {
+        tdType.textContent = type;
+    }
     tdServer.textContent = server.toString();
     if (typeof timestamp == "number") {
         const age = Math.floor((now - timestamp) / 1000);
-        const timeLeft = (bombDurations[type] * 60) - age;
+        const timeLeft = (type.duration * 60) - age;
         tdAge.textContent = timeLeft < 60 ? `${timeLeft}s` : `${Math.floor(timeLeft/60)}m${timeLeft%60}s`;
     } else {
         tdAge.textContent = timestamp;
@@ -71,7 +109,7 @@ async function refreshBombs() {
         if (activeBombs.length > 0) {
             // Add the bombs to the list
             for (const bomb of activeBombs) {
-                createBombTableRow(bomb.type, bomb.world, bomb.timestamp, bomb.username)
+                createBombTableRow(getBombType(bomb.type), bomb.world, bomb.timestamp, bomb.username)
             }
         } else {
             // There are no bombs active, so just add a row of blank values
