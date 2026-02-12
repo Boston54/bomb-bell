@@ -3,12 +3,11 @@ const bombTable = document.getElementById("bomb-table");
 const downloadsTable = document.getElementById("downloads-table");
 
 const bombDurations = Object.freeze({
-    "CombatXP": 20,
-    "ProfessionXP": 20,
-    "ProfessionSpeed": 10,
+    "Combat XP": 20,
+    "Profession XP": 20,
+    "Profession Speed": 10,
     "Loot": 20,
-    "LootChest": 20,
-    "WorldEvent": 3,
+    "Loot Chest": 20,
     "Dungeon": 10
 });
 
@@ -119,6 +118,7 @@ async function initDownloads() {
 
                 const download = document.createElement("a");
                 download.href = `/download?file=${framework}/${version}/${filename}`;
+                download.style = "color: #FFFFFF";
                 download.textContent = filename.toString();
                 tdFilename.appendChild(download);
 
