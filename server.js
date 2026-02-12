@@ -5,8 +5,6 @@ const fs = require('fs');
 
 const app = express();
 
-const port = 3000;
-
 // Parse JSON bodies
 app.use(express.json({ limit: "1kb" }));
 
@@ -65,7 +63,8 @@ app.get("/download", (req, res) => {
     res.download("./downloads/" + req.query.file);
 })
 
-app.listen(port, () => {
-    console.log("Server running at http://localhost:" + port);
-});
+app.get("/healthz", (req, res) => res.sendStatus(200));
 
+app.listen(port, () => {
+    console.log("Server running.");
+});
