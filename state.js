@@ -1,13 +1,12 @@
 let activeBombs = []
 
 const bombDurations = Object.freeze({
-        "CombatXP": 20,
-        "ProfessionXP": 20,
-        "ProfessionSpeed": 10,
-        "Loot": 20,
-        "LootChest": 20,
-        "WorldEvent": 3,
-        "Dungeon": 10
+    "Combat Experience": 20,
+    "Profession Experience": 20,
+    "Profession Speed": 10,
+    "Loot": 20,
+    "Loot Chest": 20,
+    "Dungeon": 10
 });
 
 class ThrownBomb {
