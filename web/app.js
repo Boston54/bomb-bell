@@ -36,9 +36,9 @@ const bombData = Object.freeze({
 });
 
 function getBombType(bombString) {
-    for (const [type, data] of Object.entries(bombData)) {
+    for (const [_, data] of Object.entries(bombData)) {
         if (data.string === bombString) {
-            return type;
+            return data;
         }
     }
     return null;
@@ -62,6 +62,7 @@ function createBombTableRow(type, server, timestamp, username) {
     tdServer.textContent = server.toString();
     if (typeof timestamp == "number") {
         const age = Math.floor((now - timestamp) / 1000);
+        console.log(type + " | " + typeof type);
         const timeLeft = (type.duration * 60) - age;
         tdAge.textContent = timeLeft < 60 ? `${timeLeft}s` : `${Math.floor(timeLeft/60)}m${timeLeft%60}s`;
     } else {

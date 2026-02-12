@@ -1,5 +1,3 @@
-let activeBombs = []
-
 const bombDurations = Object.freeze({
     "Combat XP": 20,
     "Profession XP": 20,
@@ -21,9 +19,13 @@ class ThrownBomb {
         return this.username === other.username
             && this.world === other.world
             && this.type === other.type
-            && Math.abs(this.timestamp - other.timestamp) < 60000; // 60 seconds leeway
+            && Math.abs(this.timestamp - other.timestamp) < 120000; // 120 seconds leeway
     }
 }
+
+let activeBombs = [];
+// leaving this here for future testing:
+// [new ThrownBomb("test", "testWorld", "Combat XP"), new ThrownBomb("test", "testWorld", "Profession XP"), new ThrownBomb("test", "testWorld", "Profession Speed"), new ThrownBomb("test", "testWorld", "Loot"), new ThrownBomb("test", "testWorld", "Loot Chest"), new ThrownBomb("test", "testWorld", "Dungeon")];
 
 function updateState(username, world, type) {
     // Pack this into a bomb
