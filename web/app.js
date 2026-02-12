@@ -36,7 +36,7 @@ const bombData = Object.freeze({
 });
 
 function getBombType(bombString) {
-    for (const [type, data] of bombData) {
+    for (const [type, data] of Object.entries(bombData)) {
         if (data.string === bombString) {
             return type;
         }
