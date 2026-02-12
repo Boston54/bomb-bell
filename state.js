@@ -1,8 +1,8 @@
 let activeBombs = []
 
 const bombDurations = Object.freeze({
-    "Combat Experience": 20,
-    "Profession Experience": 20,
+    "Combat XP": 20,
+    "Profession XP": 20,
     "Profession Speed": 10,
     "Loot": 20,
     "Loot Chest": 20,
