@@ -88,6 +88,18 @@ function createBombTableRow(type, server, timestamp, username) {
     bombTable.appendChild(tr);
 }
 
+const scroll = document.querySelector(".table-scroll");
+
+function updateFadeState() {
+    if (!scroll) return;
+
+    const canScroll = scroll.scrollHeight > scroll.clientHeight;
+    const atBottom = scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 1;
+
+    // Fade only if it can scroll AND you're not at the bottom
+    scroll.classList.toggle("fade-bottom", canScroll && !atBottom);
+}
+
 let latest = null;
 let headTr = null;
 
@@ -164,6 +176,8 @@ async function refreshBombs(data) {
 
         // Remove the loading message
         tableErr.textContent = "";
+
+        requestAnimationFrame(updateFadeState);
 
     } catch (err) {
         tableErr.textContent = "Err: Backend not reachable (" + err.message + ")";
@@ -273,3 +287,5 @@ bombTable.addEventListener("click", (e) => {
     // Update table
     if (latest !== null) refreshBombs(latest);
 });
+
+scroll.addEventListener("scroll", updateFadeState);
